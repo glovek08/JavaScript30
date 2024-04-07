@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <title>JS Drum Kit</title>
   <link rel="stylesheet" href="style.css">
   <link rel="icon" href="https://fav.farm/🔥" />
 </head>
+
 <body>
 
 
@@ -58,10 +60,54 @@
   <audio data-key="75" src="sounds/tom.wav"></audio>
   <audio data-key="76" src="sounds/tink.wav"></audio>
 
-<script>
+  <script>
+    const keys = document.querySelectorAll('.key');
+    const audio = [...document.querySelectorAll('audio')];
+    keys.forEach((el) => {
+      const currElDataKey = el.getAttribute('data-key');
+      el.addEventListener('click', () => { //Plays the current 
+        const selectedKey = audio.find(el => el.getAttribute('data-key') === currElDataKey);
+        console.log(selectedKey);
+        selectedKey.play();
+      });
+      el.addEventListener('mouseover', () => {
+        el.style.outline = '5px solid green';
+      });
+      el.addEventListener('mouseout', () => {
+        el.style.outline = 'none';
+      });
+      el.style.cursor = 'pointer';
+    });
+    document.addEventListener('keydown', (e) => {
+      const keyPressed = e.key.toUpperCase();
+      console.log(`Pressed: ${keyPressed}`);
+      const matchingDiv = [...keys].filter(el => keyPressed === el.firstElementChild.textContent)[0];
+      const matchingDivDataKey = matchingDiv ? matchingDiv.getAttribute('data-key') : null;
+      let selectedKey = null;
+      if (matchingDivDataKey !== null) {
+        selectedKey = audio.find(el => el.getAttribute('data-key') === matchingDivDataKey);
+      }
+      if (selectedKey !== null) {
+        selectedKey.currentTime = 0;
+        selectedKey.play();
+        matchingDiv.classList.add('.playing');
+      }
+      console.log(matchingDivDataKey);
+    });
+  </script>
+  <!-- 
+  Guardar todos los hijos de la clase 'key' [keys], comparar el text content del firstChild
+  de cada elemento 'key' y que coincida con la letra presionada, 
+  si coincide: extraer el data-key del elemento padre y
+  buscar el el array 'audio' el elemento que coincida con el data-key.
+  <div data-key="75" class="key">
+    <kbd>K</kbd>
+    <span class="sound">tom</span>
+  </div>
 
-</script>
-
+  <audio data-key="76" src="sounds/tink.wav"></audio>
+-->
 
 </body>
+
 </html>
